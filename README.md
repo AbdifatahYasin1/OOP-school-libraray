@@ -75,9 +75,6 @@ Install this project with:
   bundle install
 ```
 
-<!-- AUTHORS -->
-
-## 👥 Authors <a name="authors"></a>
 
 ## 👥 Author <a name="author"></a>
 
