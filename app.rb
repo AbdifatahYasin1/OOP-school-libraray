@@ -96,11 +96,11 @@ class App
     date = input_rental_date
     rental = Rental.new(date, book, person)
     @rentals << rental
-    puts 'The book has been successfully rented !'
+    puts 'The book has been successfully rented!'
   end
 
   def select_book
-    puts 'Select a book by number:'
+    puts 'Select a book by its number:'
     @books.each_with_index do |book, index|
       puts "Number: #{index + 1} - Title: #{book.title}, Author: #{book.author}"
     end
@@ -111,7 +111,7 @@ class App
   end
 
   def select_person
-    puts 'Select the person by their number:'
+    puts 'Select the person renting the book by their number:'
     @people.each_with_index do |person, index|
       puts "Number: #{index + 1} - Role: #{person.class.name}, Name: #{person.name}, ID: #{person.id}"
     end
@@ -130,7 +130,7 @@ class App
   def list_all_rentals(person_id)
     rentals = @rentals.select { |rental| rental.person.id == person_id }
     if rentals.empty?
-      puts 'No rentals found for this person'
+      puts 'No rentals found for the given person ID!'
     else
       rentals.each do |rental|
         puts "#{rental.book.title} by #{rental.book.author}, rented on #{rental.date}"
