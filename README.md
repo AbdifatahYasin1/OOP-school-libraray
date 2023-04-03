@@ -84,6 +84,11 @@ Install this project with:
 - Twitter: [@CabdifataaxYuusuf](https://twitter.com/CabdifataaxYy)
 - LinkedIn: [Cabdifataax Yaasiin](https://www.linkedin.com/in/cabdifataax-yaasiin-69977019a/)
 
+👤 **Monicah**
+
+- GitHub: [@monicah79](https://github.com/monicah79)
+- Twitter: [@MonicahWanjema](https://twitter.com/MonicaWanjema)
+- LinkedIn: [monicah-wanjema](https://www.linkedin.com/in/monicah-wanjema/)
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- FUTURE FEATURES -->
