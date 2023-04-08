@@ -6,7 +6,7 @@ describe Person do
     expect(person).to be_an_instance_of Person
   end
 
-  
+
   # def correct_name
   #   @name.correct_name
   # end
@@ -36,12 +36,5 @@ describe Person do
     # def of_age?
     #   @age >= 18
     # end
-
-   
-
-
-   
-    end
   end
-
-
+end
