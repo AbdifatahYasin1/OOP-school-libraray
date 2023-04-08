@@ -5,10 +5,12 @@ require_relative './student'
 require_relative './teacher'
 require_relative './classroom'
 require_relative './nameable'
-require_relative './file_helper'
+require_relative './data_file'
 require 'json'
 
 class App
+  attr_accessor :books, :people, :rentals
+
   def initialize
     @books = []
     @people = []
@@ -23,62 +25,96 @@ class App
     book = Book.new(title, author)
     @books << book
     puts "Created #{book.title} by #{book.author}"
+    save_data(@books, 'books.json')
+    puts 'Book created successfully'
   end
 
-  def list_books
+  def list_all_books
     if @books.empty?
-      puts 'There are no books available'
+      puts 'The book list is currently empty'
     else
+      puts 'Existing books'
       @books.each do |book|
         puts "Title: '#{book.title}', Author: '#{book.author}'"
       end
     end
   end
 
-  def list_people
+  def list_all_people
+    @people = load_data('people.json')
     if @people.empty?
-      puts 'There\'s no one here ATM!'
+      puts 'The\'s list is currently empty!'
     else
+      puts 'Existing people'
       @people.each do |person|
-        puts "Name: #{person.name} Age: #{person.age} ID: #{person.id}"
+        puts "Name: #{person['name']}, ID: #{person['id']}, Age: #{person['age']}"
       end
     end
   end
 
-  def create_person
+  def create_a_person
     puts 'Are you a:'
     puts '1 - Student'
     puts '2 - Teacher'
-    person_input = gets.chomp.to_i
-
-    case person_input
-    when 1 then create_student
-    when 2 then create_teacher
+    option = gets.chomp.to_i
+    case option
+    when 1
+      create_student
+    when 2
+      create_teacher
     else
-      raise 'Please enter a valid option, number 1 or 2'
+      raise ' Invalid option, please enter 1 or 2'
     end
   end
 
   def create_student
-    puts 'What is your name?'
-    name = gets.chomp
-    puts 'How old are you?'
-    age = gets.chomp.to_i
-    puts 'What grade are you?'
-    classroom = gets.chomp
-    puts 'Do you have your parents\' permission? [Y/N]'
-    parent_permission = gets.chomp
-    student = Student.new(name, age, classroom, parent_permission: parent_permission)
+    age = request_age
+    name = request_name
+    parent_permission = request_parent_permission
+    return if parent_permission.nil?
+
+    student = Student.new(classroom: @classroom, age: age, parent_permission: parent_permission, name: name)
     @people << student
-    puts 'Student successfully created'
+    save_data(@people, 'people.json')
+    puts 'Student created successfully'
   end
 
-  def create_teacher
-    puts 'What is your name?'
-    name = gets.chomp
-    puts 'How old are you?'
+  def request_age
+    puts 'Age:'
     age = gets.chomp.to_i
-    puts 'Enter your specialization'
+    while age <= 0
+      puts 'Invalid input. Please enter a positive number for age:'
+      age = gets.chomp.to_i
+    end
+    age
+  end
+
+  def request_name
+    puts 'Name:'
+    name = gets.chomp
+    while name.empty?
+      puts 'Invalid input. Please enter a non-empty name:'
+      name = gets.chomp
+    end
+    name
+  end
+
+  def request_parent_permission
+    puts 'Has parent permission? [Y/N]:'
+    parent_permission = gets.chomp.downcase
+    until %w[y n].include?(parent_permission)
+      puts 'Invalid input. Please enter Y or N:'
+      parent_permission = gets.chomp.downcase
+    end
+    parent_permission == 'y'
+  end
+  sleep 0.5
+  def create_teacher
+    puts 'name:'
+    name = gets.chomp
+    puts 'Age:'
+    age = gets.chomp.to_i
+    puts 'specialization:'
     specialization = gets.chomp
     teacher = Teacher.new(name, age, specialization)
     @people << teacher
@@ -86,99 +122,66 @@ class App
   end
 
   def create_rental
-    return puts 'There are no books in the library.' if @books.empty?
-    return puts 'There are no people in the system.' if @people.empty?
-
-    book = select_book
-    return puts 'Invalid book selection.' if book.nil?
-
-    person = select_person
-    return puts 'Invalid person selection.' if person.nil?
-
-    date = input_rental_date
-    rental = Rental.new(date, book, person)
-    @rentals << rental
-    puts 'The book has been successfully rented!'
-  end
-
-  def select_book
-    puts 'Select a book by its number:'
-    @books.each_with_index do |book, index|
-      puts "Number: #{index + 1} - Title: #{book.title}, Author: #{book.author}"
+    puts 'Select a book from the list'
+    @book = load_data('books.json')
+    @book.each_with_index do |book, index|
+      puts "#{index}) Title: #{book['title']}, Author: #{book['author']}"
     end
-    book_id_input = gets.chomp.to_i
-    return nil if book_id_input < 1 || book_id_input > @books.size
+    rental_book = gets.chomp.to_i
 
-    @books[book_id_input - 1]
-  end
-
-  def select_person
-    puts 'Select the person renting the book by their number:'
+    puts 'Select a person from list'
+    @people = load_data('people.json')
     @people.each_with_index do |person, index|
-      puts "Number: #{index + 1} - Role: #{person.class.name}, Name: #{person.name}, ID: #{person.id}"
+      puts "#{index}) Name: #{person['name']}, ID: #{person['id']}, Age: #{person['age']}"
     end
-    person_id_input = gets.chomp.to_i
+    rental_person = gets.chomp.to_i
 
-    return nil if person_id_input < 1 || person_id_input > @people.size
+    print 'Date: '
+    date = gets.chomp
 
-    @people[person_id_input - 1]
+    rental = Rental.new(date, @people[rental_person], @book[rental_book])
+    @rentals.push(rental)
+    save_data(@rentals, 'rental.json')
+    puts 'Rental created successfully'
   end
+end
 
-  def input_rental_date
-    puts 'Enter the rental date [yyyy-mm-dd]:'
-    gets.chomp
+def select_book
+  puts 'Select a book by its number:'
+  @books.each_with_index do |book, index|
+    puts "Number: #{index + 1} - Title: #{book.title}, Author: #{book.author}"
   end
+  book_id_input = gets.chomp.to_i
+  return nil if book_id_input < 1 || book_id_input > @books.size
 
-  def list_all_rentals(person_id)
-    rentals = @rentals.select { |rental| rental.person.id == person_id }
-    if rentals.empty?
-      puts 'No rentals found for the given person ID!'
-    else
-      rentals.each do |rental|
-        puts "#{rental.book.title} by #{rental.book.author}, rented on #{rental.date}"
-      end
-    end
+  @books[book_id_input - 1]
+end
+
+def select_person
+  puts 'Select the person renting the book by their number:'
+  @people.each_with_index do |person, index|
+    puts "Number: #{index + 1} - Role: #{person.class.name}, Name: #{person.name}, ID: #{person.id}"
   end
+  person_id_input = gets.chomp.to_i
 
-  def save_files
-    instance_variables.each do |var|
-      file_name = var.to_s.delete('@')
-      ary = []
-      instance_variable_get(var).each do |obj|
-        hash = { ref: obj, value: to_hash(obj) }
-        ary << hash
-      end
-      File.write("./data/#{file_name}.json", JSON.generate(ary))
-    end
-  end
+  return nil if person_id_input < 1 || person_id_input > @people.size
 
-  def read_files
-    instance_variables.each do |var|
-      file_name = var.to_s.delete('@')
+  @people[person_id_input - 1]
+end
 
-      if File.exist?("./data/#{file_name}.json") && !File.empty?("./data/#{file_name}.json")
-        ary = JSON.parse(File.read("./data/#{file_name}.json"))
-        case file_name
-        when 'books'
-          read_book(ary)
-        when 'people'
-          read_people(ary)
-        else
-          read_rental(ary, File.read('./data/books.json'), File.read('./data/people.json'))
-        end
-      else
-        File.write("./data/#{file_name}.json", '[]')
-      end
-    end
-  end
+def input_rental_date
+  puts 'Enter the rental date [yyyy-mm-dd]:'
+  gets.chomp
+end
 
-  private
+  public
 
-  def to_hash(obj)
-    hash = {}
-    obj.instance_variables.each do |var|
-      hash[var.to_s.delete('@')] = obj.instance_variable_get(var)
-    end
-    hash
+def list_all_rentals()
+  @rental = load_data('rental.json')
+
+  print 'ID of person: '
+  id = gets.chomp.to_i
+  @rental.each do |rental|
+    puts "Date: #{rental['date']}, Book: #{rental['book']['title']}, by #{rental['book']['author']}" if id == rental['person']['id']
   end
 end
