@@ -12,6 +12,7 @@
   - [Setup](#setup)
   - [Prerequisites](#prerequisites)
   - [Install](#install)
+  - [Run tests](#run-tests)
 - [👥 Authors](#authors)
 - [🔭 Future Features](#future-features)
 - [🤝 Contributing](#contributing)
@@ -75,6 +76,17 @@ Install this project with:
   bundle install
 ```
 
+### Run tests
+
+To run tests, run the following command:
+
+<!--
+
+```sh
+  rspec spec 
+```
+--->
+
 
 ## 👥 Author <a name="author"></a>
 
@@ -83,6 +95,13 @@ Install this project with:
 - GitHub: [@AbdifatahYasin1](https://github.com/AbdifatahYasin1)
 - Twitter: [@CabdifataaxYuusuf](https://twitter.com/CabdifataaxYy)
 - LinkedIn: [Cabdifataax Yaasiin](https://www.linkedin.com/in/cabdifataax-yaasiin-69977019a/)
+
+👤 **Monicah**
+
+- GitHub: [@monicah79](https://github.com/monicah79)
+- Twitter: [@MonicahWanjema](https://twitter.com/MonicaWanjema)
+- LinkedIn: [monicah-wanjema](https://www.linkedin.com/in/monicah-wanjema/)
+
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
