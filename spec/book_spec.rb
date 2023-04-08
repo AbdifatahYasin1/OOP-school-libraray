@@ -22,31 +22,31 @@ describe '#author' do
   end
 
   # Test for add_rental
-describe '#add_rental' do
-  it 'should add the rental to rental array' do
-    book = Book.new('Hello world', 'Joe Ray')
-    person = Person.new(name: 'Hello world', age: 37, parent_permission: true)
-    rental_date = '2022-11-11'
+  describe '#add_rental' do
+    it 'should add the rental to rental array' do
+      book = Book.new('Hello world', 'Joe Ray')
+      person = Person.new(name: 'Hello world', age: 37, parent_permission: true)
+      rental_date = '2022-11-11'
 
-    expect do
-      book.add_rental(rental_date, person)
-    end.to change { book.rentals.length }.by(1)
+      expect do
+        book.add_rental(rental_date, person)
+      end.to change { book.rentals.length }.by(1)
 
-    expect(book.rentals.last[:date]).to eq(rental_date)
-    expect(book.rentals.last[:book]).to eq(book.to_h)
-    expect(book.rentals.last[:person]).to eq(person.to_h)
-  end
-end
-
-# Test for to_h
-describe Book do
-  let(:book) { Book.new('Billy colloo', 'Willie Cee') }
-
-  describe '#to_h' do
-    it 'returns a hash representation of the book' do
-      expected_hash = { title: 'Billy colloo', author: 'Willie Cee', rentals: [] }
-      expect(book.to_h).to eq(expected_hash)
+      expect(book.rentals.last[:date]).to eq(rental_date)
+      expect(book.rentals.last[:book]).to eq(book.to_h)
+      expect(book.rentals.last[:person]).to eq(person.to_h)
     end
   end
-end
+
+  # Test for to_h
+  describe Book do
+    let(:book) { Book.new('Billy colloo', 'Willie Cee') }
+
+    describe '#to_h' do
+      it 'returns a hash representation of the book' do
+        expected_hash = { title: 'Billy colloo', author: 'Willie Cee', rentals: [] }
+        expect(book.to_h).to eq(expected_hash)
+      end
+    end
+  end
 end
