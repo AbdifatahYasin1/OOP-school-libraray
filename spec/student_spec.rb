@@ -29,25 +29,25 @@ describe Student do
     end
   end
 
-  describe "#classroom=" do
-  let(:classroom) { Classroom.new("Classroom A") }
-  let(:student) { Student.new(classroom: classroom, age: 10) }
+  describe '#classroom=' do
+    let(:classroom) { Classroom.new('Classroom A') }
+    let(:student) { Student.new(classroom: classroom, age: 10) }
 
-  context "when setting the classroom" do
-    before { student.classroom = classroom }
+    context 'when setting the classroom' do
+      before { student.classroom = classroom }
 
-    it "sets the classroom instance variable" do
-      expect(student.instance_variable_get(:@classroom)).to eq(classroom)
-    end
+      it 'sets the classroom instance variable' do
+        expect(student.instance_variable_get(:@classroom)).to eq(classroom)
+      end
 
-    it "adds the student to the classroom's list of students" do
-      expect(classroom.students).to include(student)
-    end
+      it "adds the student to the classroom's list of students" do
+        expect(classroom.students).to include(student)
+      end
 
-    it "does not add the student to the classroom's list of students if they are already included" do
-      student.classroom = classroom
-      expect(classroom.students.count(student)).to eq(1)
+      it "does not add the student to the classroom's list of students if they are already included" do
+        student.classroom = classroom
+        expect(classroom.students.count(student)).to eq(1)
+      end
     end
   end
-end
 end
