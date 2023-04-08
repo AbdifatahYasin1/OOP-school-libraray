@@ -80,13 +80,9 @@ Install this project with:
 
 To run tests, run the following command:
 
-<!--
-
 ```sh
   rspec spec 
 ```
---->
-
 
 ## 👥 Author <a name="author"></a>
 
