@@ -20,5 +20,13 @@ describe Student do
     it 'Creates a new student with a classroom' do
       expect(student.classroom).to eq('Math')
     end
+
+    describe '#play_hooky' do
+  it 'should show play_hooky symbol' do
+    student = Student.new(classroom: 6, age: 13, parent_permission: 'Yes', name: 'Mark')
+    expect(student.play_hooky).to eq '¯\(ツ)/¯'
   end
+end
+  end
+
 end
